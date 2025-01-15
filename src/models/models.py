@@ -17,7 +17,7 @@ class MovementType(Enum):
 class Item(Base):
     __tablename__ = 'items'
 
-    codigo = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     produto = Column(String, index=True)
     unidade_medida = Column(Enum(UoMType), nullable=False)
     custo_medio = Column(Integer, CheckConstraint('custo_medio >= 0', name='average_cost_positive'))
@@ -26,7 +26,7 @@ class Item(Base):
 
     def to_dict(self):
         return {
-            'codigo': self.codigo,
+            'id': self.id,
             'produto': self.produto,
             'unidade_medida': self.unidade_medida.value,
             'custo_medio': self.custo_medio,
@@ -40,7 +40,7 @@ class StockMovement(Base):
     id = Column(Integer, primary_key=True, index=True)
     data = Column(DateTime, default=datetime.now(datetime.timezone.utc), nullable=False)
     movimentacao = Column(Enum(MovementType), nullable=False)
-    codigo_produto = Column(Integer, ForeignKey('items.codigo'), nullable=False)
+    id_produto = Column(Integer, ForeignKey('items.id'), nullable=False)
     quantidade = Column(Integer, CheckConstraint('quantidade >= 0', name='quantity_positive'))
     estoque_final = Column(Integer, CheckConstraint('estoque_final >= 0', name='final_stock_positive'))
 
@@ -51,7 +51,7 @@ class StockMovement(Base):
             'id': self.id,
             'data': self.data.isoformat(),
             'movimentacao': self.movimentacao.value,
-            'codigo_produto': self.codigo_produto,
+            'id_produto': self.id_produto,
             'quantidade': self.quantidade,
             'estoque_final': self.estoque_final
         }
