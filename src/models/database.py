@@ -12,10 +12,16 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class Base(DeclarativeBase):
+    """Base class for all models."""
     pass
 
 
 def get_db():
+    """Get a new database session.
+
+    Yields:
+        Session: A new database session.
+    """
     db = SessionLocal()
     try:
         yield db
