@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from typing import Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, PositiveFloat, PositiveInt, field_validator
@@ -65,6 +67,33 @@ class ItemResponse(ItemSchema):
 
     Attributes:
         id (int): The item ID.
+    """
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+
+
+class MovementHistorySchema(BaseModel):
+    """Schema for movement data.
+
+    Attributes:
+        data (datetime): The movement date.
+        movimentacao (Literal): The movement type.
+        produto_id (int): The item ID.
+        quantidade (Union[PositiveFloat, PositiveInt]): The quantity.
+        estoque_final (Union[PositiveFloat, PositiveInt]): The final stock quantity.
+    """
+    data: datetime
+    movimentacao: Literal['entrada', 'saida']
+    produto_id: int
+    quantidade: Union[PositiveFloat, PositiveInt] = Field(..., ge=0)
+    estoque_final: Union[PositiveFloat, PositiveInt] = Field(..., ge=0)
+
+
+class MovementHistoryResponse(MovementHistorySchema):
+    """Schema for movement response.
+
+    Attributes:
+        id (int): The movement ID.
     """
     model_config = ConfigDict(from_attributes=True)
     id: int

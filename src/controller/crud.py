@@ -148,7 +148,7 @@ def get_product_movement_history(db: Session, product_id: int):
     Returns:
         list: A list of movement history records for the product.
     """
-    movements = db.scalars(select(StockMovementHistory).filter_by(id_product=product_id)).all()
+    movements = db.scalars(select(StockMovementHistory).filter_by(produto_id=product_id)).all()
     if movements is None:
         return None
     return movements

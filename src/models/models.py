@@ -68,7 +68,7 @@ class StockMovementHistory(Base):
         id (int): The movement ID.
         data (DateTime): The date of the movement.
         movimentacao (Enum): The type of movement.
-        id_produto (int): The product ID.
+        produto_id (int): The product ID.
         quantidade (int): The quantity moved.
         estoque_final (int): The final stock quantity.
         produto (relationship): The related product.
@@ -78,7 +78,7 @@ class StockMovementHistory(Base):
     id = Column(Integer, primary_key=True, index=True)
     data = Column(DateTime(timezone=True), nullable=False)
     movimentacao = Column(Enum(MovementType), nullable=False)
-    id_produto = Column(Integer, ForeignKey('items.id'), nullable=False)
+    produto_id = Column(Integer, ForeignKey('items.id'), nullable=False)
     quantidade = Column(Integer, CheckConstraint('quantidade >= 0', name='quantity_positive'), nullable=False)
     estoque_final = Column(
         Integer,
@@ -98,7 +98,7 @@ class StockMovementHistory(Base):
             'id': self.id,
             'data': self.data,
             'movimentacao': self.movimentacao.value,
-            'id_produto': self.id_produto,
+            'produto_id': self.produto_id,
             'quantidade': self.quantidade,
             'estoque_final': self.estoque_final,
         }
