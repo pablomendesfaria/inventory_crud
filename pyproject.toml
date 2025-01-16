@@ -11,6 +11,21 @@ sqlalchemy = "^2.0.37"
 pydantic = "^2.10.5"
 
 
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.14.1"
+blue = "^0.9.1"
+isort = "^5.13.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.taskipy.tasks]
+format = "blue . && isort ."
+
+[tool.blue]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120

@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field, field_validator, PositiveFloat, PositiveInt, ConfigDict
-from typing import Literal, Union, Optional
+from typing import Literal, Optional, Union
+
+from pydantic import BaseModel, ConfigDict, Field, PositiveFloat, PositiveInt, field_validator
+
 
 class ItemSchema(BaseModel):
     produto: str
@@ -14,8 +16,10 @@ class ItemSchema(BaseModel):
             raise ValueError('Produto não pode ser vazio')
         return v
 
+
 class ItemCreate(ItemSchema):
     pass
+
 
 class ItemUpdate(ItemSchema):
     produto: Optional[str]
@@ -23,6 +27,7 @@ class ItemUpdate(ItemSchema):
     custo_medio: Optional[PositiveFloat] = Field(None, ge=0)
     valor_venda: Optional[PositiveFloat] = Field(None, ge=0)
     estoque: Optional[Union[PositiveFloat, PositiveInt]] = Field(None, ge=0)
+
 
 class ItemResponse(ItemSchema):
     model_config = ConfigDict(from_attributes=True)
