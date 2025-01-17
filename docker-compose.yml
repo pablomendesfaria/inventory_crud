@@ -26,6 +26,17 @@ services:
       - "8000:8000"
     networks:
       - app-network
+  
+  frontend:
+    build:
+      context: .
+      dockerfile: src/frontend/Dockerfile
+    depends_on:
+      - controller
+    ports:
+      - "8501:8501"
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
