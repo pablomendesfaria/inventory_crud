@@ -88,7 +88,7 @@ elif choice == 'Add Item':
     unidade_medida = st.selectbox('Unit of Measure', ['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'])
     custo_medio = st.number_input('Average Cost', min_value=0.0, format='%.2f')
     valor_venda = st.number_input('Sale Value', min_value=0.0, format='%.2f')
-    estoque = st.number_input('Stock', min_value=1, format='%d')
+    estoque = st.number_input('Stock', min_value=0, format='%d')
 
     if st.button('Add Item'):
         data = {
@@ -111,7 +111,7 @@ elif choice == 'Update Item':
     unidade_medida = st.selectbox('Unit of Measure', ['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'])
     custo_medio = st.number_input('Average Cost', min_value=0.0, format='%.2f')
     valor_venda = st.number_input('Sale Value', min_value=0.0, format='%.2f')
-    estoque = st.number_input('Stock', min_value=1, format='%d')
+    estoque = st.number_input('Stock', min_value=0, format='%d')
 
     if st.button('Update Item'):
         data = {
