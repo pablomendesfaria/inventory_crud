@@ -13,14 +13,14 @@ class ItemSchema(BaseModel):
         unidade_medida (Literal): The unit of measure.
         custo_medio (PositiveFloat): The average cost.
         valor_venda (PositiveFloat): The sale value.
-        estoque (Union[PositiveFloat, PositiveInt]): The stock quantity.
+        estoque (PositiveFloat): The stock quantity.
     """
 
     produto: str
     unidade_medida: UoMType
     custo_medio: PositiveFloat = Field(..., ge=0)
     valor_venda: PositiveFloat = Field(..., ge=0)
-    estoque: Union[PositiveFloat, PositiveInt] = Field(..., ge=0)
+    estoque: PositiveFloat = Field(..., ge=0)
 
     @field_validator('produto')
     def produto_must_not_be_empty(cls, v):
@@ -54,14 +54,14 @@ class ItemUpdate(ItemSchema):
         unidade_medida (Optional[Literal]): The unit of measure.
         custo_medio (Optional[PositiveFloat]): The average cost.
         valor_venda (Optional[PositiveFloat]): The sale value.
-        estoque (Optional[Union[PositiveFloat, PositiveInt]]): The stock quantity.
+        estoque (Optional[PositiveFloat]): The stock quantity.
     """
 
     produto: Optional[str]
     unidade_medida: Optional[UoMType]
     custo_medio: Optional[PositiveFloat] = Field(None, ge=0)
     valor_venda: Optional[PositiveFloat] = Field(None, ge=0)
-    estoque: Optional[Union[PositiveFloat, PositiveInt]] = Field(None, ge=0)
+    estoque: Optional[PositiveFloat] = Field(None, ge=0)
 
 
 class ItemResponse(ItemSchema):
@@ -82,15 +82,15 @@ class MovementHistorySchema(BaseModel):
         data (datetime): The movement date.
         movimentacao (Literal): The movement type.
         produto_id (int): The item ID.
-        quantidade (Union[PositiveFloat, PositiveInt]): The quantity.
-        estoque_final (Union[PositiveFloat, PositiveInt]): The final stock quantity.
+        quantidade (PositiveFloat): The quantity.
+        estoque_final (PositiveFloat): The final stock quantity.
     """
 
     data: datetime
     movimentacao: MovementType
     produto_id: int
-    quantidade: Union[PositiveFloat, PositiveInt] = Field(..., ge=0)
-    estoque_final: Union[PositiveFloat, PositiveInt] = Field(..., ge=0)
+    quantidade: PositiveFloat = Field(..., ge=0)
+    estoque_final: PositiveFloat = Field(..., ge=0)
 
 
 class MovementHistoryResponse(MovementHistorySchema):

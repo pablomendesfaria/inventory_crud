@@ -1,7 +1,7 @@
 import enum
 
 from models.database import Base
-from sqlalchemy import CheckConstraint, Column, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy import CheckConstraint, Column, DateTime, Enum, ForeignKey, Integer, String, Float
 from sqlalchemy.orm import relationship
 
 
@@ -40,14 +40,14 @@ class Item(Base):
     produto = Column(String, index=True, nullable=False)
     unidade_medida = Column(Enum(UoMType), nullable=False)
     custo_medio = Column(
-        Integer,
+        Float,
         CheckConstraint('custo_medio >= 0', name='average_cost_positive'),
     )
     valor_venda = Column(
-        Integer,
+        Float,
         CheckConstraint('valor_venda >= 0', name='sale_value_positive'),
     )
-    estoque = Column(Integer, CheckConstraint('estoque >= 0', name='stock_positive'), nullable=False)
+    estoque = Column(Float, CheckConstraint('estoque >= 0', name='stock_positive'), nullable=False)
 
     def to_dict(self):
         """Convert the item to a dictionary.
@@ -84,9 +84,9 @@ class StockMovementHistory(Base):
     data = Column(DateTime(timezone=True), nullable=False)
     movimentacao = Column(Enum(MovementType), nullable=False)
     produto_id = Column(Integer, ForeignKey('items.id'), nullable=False)
-    quantidade = Column(Integer, CheckConstraint('quantidade >= 0', name='quantity_positive'), nullable=False)
+    quantidade = Column(Float, CheckConstraint('quantidade > 0', name='quantity_greater_zero'), nullable=False)
     estoque_final = Column(
-        Integer,
+        Float,
         CheckConstraint('estoque_final >= 0', name='final_stock_positive'),
         nullable=False,
     )

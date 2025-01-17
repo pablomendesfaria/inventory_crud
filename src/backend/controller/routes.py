@@ -20,6 +20,8 @@ def read_items(db: Session = Depends(get_db)):
         List[ItemResponse]: A list of all items.
     """
     items = crud.get_items(db)
+    if not items:
+        raise HTTPException(status_code=404, detail='Nenhum item encontrado')
     return items
 
 

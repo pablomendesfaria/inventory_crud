@@ -40,7 +40,7 @@ def get_item(db: Session, item_id: int):
         Item: The item with the given ID, or None if not found.
     """
     item = db.get(Item, item_id)
-    if item is None:
+    if not item:
         return None
     return item
 
@@ -87,7 +87,7 @@ def update_item(db: Session, item_id: int, item_update: ItemUpdate):
         Item: The updated item, or None if not found.
     """
     item = db.get(Item, item_id)
-    if item is None:
+    if not item:
         return None
 
     # Armazenar o estoque antes da atualização
@@ -130,13 +130,13 @@ def delete_item(db: Session, item_id: int):
         Item: The deleted item, or None if not found.
     """
     moviments = db.scalars(select(StockMovementHistory).filter_by(produto_id=item_id)).all()
-    if moviments is not None:
+    if moviments:
         for moviment in moviments:
             db.delete(moviment)
             db.commit()
 
     item = db.get(Item, item_id)
-    if item is None:
+    if not item:
         return None
 
     db.delete(item)
@@ -155,7 +155,7 @@ def get_product_movement_history(db: Session, product_id: int):
         list: A list of movement history records for the product.
     """
     movements = db.scalars(select(StockMovementHistory).filter_by(produto_id=product_id)).all()
-    if movements is None:
+    if not movements:
         return None
     return movements
 
