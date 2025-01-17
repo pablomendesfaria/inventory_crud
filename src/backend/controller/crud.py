@@ -66,11 +66,12 @@ def create_item(db: Session, item: ItemCreate):
     db.commit()
     db.refresh(new_item)
 
-    # Criar histórico de movimentação de entrada
-    new_movement = create_movement_history(db, new_item, MovementType.ENTRADA, new_item.estoque)
-    db.add(new_movement)
-    db.commit()
-    db.refresh(new_movement)
+    if item.estoque > 0:
+        # Criar histórico de movimentação de entrada
+        new_movement = create_movement_history(db, new_item, MovementType.ENTRADA, new_item.estoque)
+        db.add(new_movement)
+        db.commit()
+        db.refresh(new_movement)
     return new_item
 
 
@@ -119,7 +120,7 @@ def update_item(db: Session, item_id: int, item_update: ItemUpdate):
 
 
 def delete_item(db: Session, item_id: int):
-    """Delete an item by ID.
+    """Delete an item by ID and its associated movement history.
 
     Args:
         db (Session): The database session.
@@ -128,6 +129,12 @@ def delete_item(db: Session, item_id: int):
     Returns:
         Item: The deleted item, or None if not found.
     """
+    moviments = db.scalars(select(StockMovementHistory).filter_by(produto_id=item_id)).all()
+    if moviments is not None:
+        for moviment in moviments:
+            db.delete(moviment)
+            db.commit()
+
     item = db.get(Item, item_id)
     if item is None:
         return None
