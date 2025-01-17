@@ -1,7 +1,7 @@
 import enum
 
 from models.database import Base
-from sqlalchemy import CheckConstraint, Column, DateTime, Enum, ForeignKey, Integer, String, Float
+from sqlalchemy import CheckConstraint, Column, DateTime, Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 
