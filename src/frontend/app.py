@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 import streamlit as st
 
-API_URL = 'http://localhost:8000/api'
+API_URL = 'http://controller:8000/api'
 
 
 def get_items():
