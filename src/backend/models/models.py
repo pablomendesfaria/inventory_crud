@@ -1,11 +1,13 @@
+import enum
+
+from models.database import Base
 from sqlalchemy import CheckConstraint, Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from src.models.database import Base
 
-
-class UoMType(Enum):
+class UoMType(enum.Enum):
     """Enumeration for unit of measure types."""
+
     LITRO = 'litro'
     METRO = 'metro'
     QUILOGRAMA = 'quilograma'
@@ -13,8 +15,9 @@ class UoMType(Enum):
     QUANTIDADE = 'quantidade'
 
 
-class MovementType(Enum):
+class MovementType(enum.Enum):
     """Enumeration for movement types."""
+
     ENTRADA = 'entrada'
     SAIDA = 'saida'
 
@@ -30,6 +33,7 @@ class Item(Base):
         valor_venda (int): The sale value.
         estoque (int): The stock quantity.
     """
+
     __tablename__ = 'items'
 
     id = Column(Integer, primary_key=True, index=True)
@@ -73,6 +77,7 @@ class StockMovementHistory(Base):
         estoque_final (int): The final stock quantity.
         produto (relationship): The related product.
     """
+
     __tablename__ = 'stock_movements_history'
 
     id = Column(Integer, primary_key=True, index=True)

@@ -1,8 +1,7 @@
+from models.models import Item, MovementType, StockMovementHistory
+from schemas.schema import ItemCreate, ItemUpdate
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-
-from src.models.models import Item, MovementType, StockMovementHistory
-from src.schemas.schema import ItemCreate, ItemUpdate
 
 
 def get_current_date_formatted(db: Session):
@@ -14,7 +13,7 @@ def get_current_date_formatted(db: Session):
     Returns:
         str: The current date formatted as DD/MM/YYYY.
     """
-    result = db.execute(select([func.to_char(func.current_date(), 'DD/MM/YYYY')])).scalar()
+    result = db.execute(select(func.current_date())).scalar()
     return result
 
 
@@ -167,8 +166,8 @@ def create_movement_history(db: Session, item: Item, tipo_movimentacao: Movement
         StockMovementHistory: The created stock movement history record.
     """
     new_movement = StockMovementHistory(
-        data_movimentacao=get_current_date_formatted(db),
-        tipo_movimentacao=tipo_movimentacao,
+        data=get_current_date_formatted(db),
+        movimentacao=tipo_movimentacao,
         produto_id=item.id,
         quantidade=quantidade,
         estoque_final=item.estoque,

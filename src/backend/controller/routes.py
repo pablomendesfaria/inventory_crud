@@ -1,13 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 from typing import List
-from src.models.database import get_db
-from src.schemas.schema import ItemResponse, ItemCreate, ItemUpdate, MovementHistoryResponse
-from src.controller import crud
+
+from controller import crud
+from fastapi import APIRouter, Depends, HTTPException
+from models.database import get_db
+from schemas.schema import ItemCreate, ItemResponse, ItemUpdate, MovementHistoryResponse
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
-@router.get("/items", response_model=List[ItemResponse])
+
+@router.get('/items', response_model=List[ItemResponse])
 def read_items(db: Session = Depends(get_db)):
     """Get all items.
 
@@ -20,7 +22,8 @@ def read_items(db: Session = Depends(get_db)):
     items = crud.get_items(db)
     return items
 
-@router.get("/items/{item_id}", response_model=ItemResponse)
+
+@router.get('/items/{item_id}', response_model=ItemResponse)
 def read_item(item_id: int, db: Session = Depends(get_db)):
     """Get an item by ID.
 
@@ -36,10 +39,11 @@ def read_item(item_id: int, db: Session = Depends(get_db)):
     """
     item = crud.get_item(db, item_id)
     if item is None:
-        raise HTTPException(status_code=404, detail="Item não encontrado")
+        raise HTTPException(status_code=404, detail='Item não encontrado')
     return item
 
-@router.post("/items", response_model=ItemResponse)
+
+@router.post('/items', response_model=ItemResponse)
 def create_item(item: ItemCreate, db: Session = Depends(get_db)):
     """Create a new item.
 
@@ -52,7 +56,8 @@ def create_item(item: ItemCreate, db: Session = Depends(get_db)):
     """
     return crud.create_item(db, item)
 
-@router.put("/items/{item_id}", response_model=ItemResponse)
+
+@router.put('/items/{item_id}', response_model=ItemResponse)
 def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_db)):
     """Update an existing item.
 
@@ -69,10 +74,11 @@ def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_db)):
     """
     updated_item = crud.update_item(db, item_id, item)
     if updated_item is None:
-        raise HTTPException(status_code=404, detail="Item não encontrado")
+        raise HTTPException(status_code=404, detail='Item não encontrado')
     return updated_item
 
-@router.delete("/items/{item_id}", response_model=ItemResponse)
+
+@router.delete('/items/{item_id}', response_model=ItemResponse)
 def delete_item(item_id: int, db: Session = Depends(get_db)):
     """Delete an item by ID.
 
@@ -88,10 +94,11 @@ def delete_item(item_id: int, db: Session = Depends(get_db)):
     """
     deleted_item = crud.delete_item(db, item_id)
     if deleted_item is None:
-        raise HTTPException(status_code=404, detail="Item não encontrado")
+        raise HTTPException(status_code=404, detail='Item não encontrado')
     return deleted_item
 
-@router.get("/movements/{product_id}", response_model=List[MovementHistoryResponse])
+
+@router.get('/movements/{product_id}', response_model=List[MovementHistoryResponse])
 def get_product_movement_history(product_id: int, db: Session = Depends(get_db)):
     """Get the movement history for a product.
 
@@ -107,5 +114,5 @@ def get_product_movement_history(product_id: int, db: Session = Depends(get_db))
     """
     movements = crud.get_product_movement_history(db, product_id)
     if movements is None:
-        raise HTTPException(status_code=404, detail="Nenhum historico de movimento encontrado para este produto")
+        raise HTTPException(status_code=404, detail='Nenhum historico de movimento encontrado para este produto')
     return movements
