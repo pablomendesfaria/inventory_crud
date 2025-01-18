@@ -46,7 +46,7 @@ def create_item(data):
         dict: The created item data if the request is successful, otherwise None.
     """
     response = requests.post(f'{API_URL}/items', json=data)
-    if response.status_code == 201:
+    if response.status_code == 200:
         return response.json()
     else:
         st.error(f'Erro: {response.status_code} - {response.text}')
@@ -107,34 +107,54 @@ def get_movement_history(product_id):
 
 st.title('Gestão de Inventário')
 
-menu = ['Ver Itens', 'Ver Item', 'Adicionar Item', 'Atualizar Item', 'Deletar Item', 'Ver Histórico de Movimentação']
-choice = st.sidebar.selectbox('Menu', menu)
+st.sidebar.title('Menu')
+menu_options = {
+    'Ver Itens': 'view_items',
+    'Adicionar Item': 'add_item',
+    'Atualizar Item': 'update_item',
+    'Deletar Item': 'delete_item',
+    'Histórico de Movimentação': 'view_movement_history',
+}
 
-if choice == 'Ver Itens':
+# Inicializa o estado da sessão
+if 'choice' not in st.session_state:
+    st.session_state.choice = None
+
+# Função para definir a escolha do menu
+def set_choice(choice):
+    st.session_state.choice = choice
+
+
+# Cria os botões do menu
+for option, value in menu_options.items():
+    if st.sidebar.button(option, on_click=set_choice, args=(value,)):
+        st.session_state.choice = value
+
+choice = st.session_state.choice
+
+if choice == 'view_items':
     st.subheader('Ver Itens')
-    items = get_items()
-    if items:
-        df = pd.DataFrame(items)
-        st.dataframe(df)
-
-elif choice == 'Ver Item':
-    st.subheader('Ver Item')
-    item_id = st.number_input('ID do Item', min_value=1, format='%d')
-    if st.button('Ver Item'):
+    item_id = st.number_input('Busar item por ID', min_value=1, format='%d')
+    if st.button('Buscar'):
         item = get_item(item_id)
         if item:
             df = pd.DataFrame([item])
-            st.dataframe(df)
+            st.write(df.to_html(index=False), unsafe_allow_html=True)
+    else:
+        items = get_items()
+        if items:
+            df = pd.DataFrame(items)
+            st.write(df.to_html(index=False), unsafe_allow_html=True)
 
-elif choice == 'Adicionar Item':
+elif choice == 'add_item':
     st.subheader('Adicionar Item')
     produto = st.text_input('Nome do Produto')
     unidade_medida = st.selectbox('Unidade de Medida', ['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'])
     custo_medio = st.number_input('Custo Médio', min_value=0.0, format='%.2f')
     valor_venda = st.number_input('Valor de Venda', min_value=0.0, format='%.2f')
-    estoque = st.number_input('Estoque', min_value=0, format='%d')
+    estoque = st.number_input('Estoque', min_value=0.0, format='%.2f')
 
-    if st.button('Adicionar Item'):
+    if st.button('Adicionar'):
         data = {
             'produto': produto,
             'unidade_medida': unidade_medida,
@@ -146,45 +166,52 @@ elif choice == 'Adicionar Item':
         if item:
             st.success('Item adicionado com sucesso')
             df = pd.DataFrame([item])
-            st.dataframe(df)
+            st.write(df.to_html(index=False), unsafe_allow_html=True)
 
-elif choice == 'Atualizar Item':
+elif choice == 'update_item':
     st.subheader('Atualizar Item')
     item_id = st.number_input('ID do Item', min_value=1, format='%d')
-    produto = st.text_input('Nome do Produto')
-    unidade_medida = st.selectbox('Unidade de Medida', ['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'])
-    custo_medio = st.number_input('Custo Médio', min_value=0.0, format='%.2f')
-    valor_venda = st.number_input('Valor de Venda', min_value=0.0, format='%.2f')
-    estoque = st.number_input('Estoque', min_value=0, format='%d')
-
-    if st.button('Atualizar Item'):
-        data = {
-            'produto': produto,
-            'unidade_medida': unidade_medida,
-            'custo_medio': custo_medio,
-            'valor_venda': valor_venda,
-            'estoque': estoque,
-        }
-        item = update_item(item_id, data)
+    if st.button('Buscar'):
+        item = get_item(item_id)
         if item:
-            st.success('Item atualizado com sucesso')
-            df = pd.DataFrame([item])
-            st.dataframe(df)
+            produto = st.text_input('Nome do Produto', value=item['produto'])
+            unidade_medida = st.selectbox(
+                'Unidade de Medida',
+                ['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'],
+                index=['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'].index(item['unidade_medida']),
+            )
+            custo_medio = st.number_input('Custo Médio', min_value=0.0, format='%.2f', value=item['custo_medio'])
+            valor_venda = st.number_input('Valor de Venda', min_value=0.0, format='%.2f', value=item['valor_venda'])
+            estoque = st.number_input('Estoque', min_value=0.0, format='%.2f', value=item['estoque'])
 
-elif choice == 'Deletar Item':
+            if st.button('Atualizar'):
+                data = {
+                    'produto': produto,
+                    'unidade_medida': unidade_medida,
+                    'custo_medio': custo_medio,
+                    'valor_venda': valor_venda,
+                    'estoque': estoque,
+                }
+                updated_item = update_item(item_id, data)
+                if updated_item:
+                    st.success('Item atualizado com sucesso')
+                    df = pd.DataFrame([updated_item])
+                    st.write(df.to_html(index=False), unsafe_allow_html=True)
+
+elif choice == 'delete_item':
     st.subheader('Deletar Item')
     item_id = st.number_input('ID do Item', min_value=1, format='%d')
 
-    if st.button('Deletar Item'):
+    if st.button('Deletar'):
         item = delete_item(item_id)
         if item:
             st.success('Item deletado com sucesso')
 
-elif choice == 'Ver Histórico de Movimentação':
+elif choice == 'view_movement_history':
     st.subheader('Ver Histórico de Movimentação')
     product_id = st.number_input('ID do Produto', min_value=1, format='%d')
-    if st.button('Ver Histórico de Movimentação'):
+    if st.button('Buscar'):
         movements = get_movement_history(product_id)
         if movements:
             df = pd.DataFrame(movements)
-            st.dataframe(df)
+            st.write(df.to_html(index=False), unsafe_allow_html=True)
