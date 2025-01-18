@@ -14,7 +14,7 @@ services:
     networks:
       - app-network
 
-  controller:
+  backend:
     build:
       context: .
       dockerfile: src/backend/Dockerfile
@@ -26,13 +26,13 @@ services:
       - "8000:8000"
     networks:
       - app-network
-  
+
   frontend:
     build:
       context: .
       dockerfile: src/frontend/Dockerfile
     depends_on:
-      - controller
+      - backend
     ports:
       - "8501:8501"
     networks:
