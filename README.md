@@ -1,8 +1,8 @@
-# Inventory Management System
+# Inventory CRUD
 
 ## Descrição
 
-O Inventory Management System é uma aplicação web para gerenciar o inventário de produtos. A aplicação permite visualizar, adicionar, atualizar e deletar itens do inventário, bem como visualizar o histórico de movimentação dos produtos. A aplicação é composta por um backend desenvolvido com FastAPI e um frontend minimalista e moderno desenvolvido com Streamlit.
+O Inventory CRUD é uma aplicação web simples para gerenciar o inventário de produtos manualmente. A aplicação permite visualizar, adicionar, atualizar e deletar itens do inventário, bem como visualizar o histórico de movimentação dos produtos. A aplicação é composta por um backend desenvolvido com FastAPI e um frontend minimalista desenvolvido com Streamlit.
 
 ## Estrutura do Projeto
 
