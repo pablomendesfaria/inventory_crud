@@ -152,7 +152,10 @@ elif choice == 'add_item':
     unidade_medida = st.selectbox('Unidade de Medida', ['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'])
     custo_medio = st.number_input('Custo Médio', min_value=0.0, format='%.2f')
     valor_venda = st.number_input('Valor de Venda', min_value=0.0, format='%.2f')
-    estoque = st.number_input('Estoque', min_value=0.0, format='%.2f')
+    if unidade_medida == 'quantidade':
+        estoque = st.number_input('Estoque', min_value=0, format='%d')
+    else:
+        estoque = st.number_input('Estoque', min_value=0.0, format='%.2f')
 
     if st.button('Adicionar'):
         data = {
@@ -186,7 +189,10 @@ elif choice == 'update_item':
         )
         custo_medio = st.number_input('Custo Médio', min_value=0.0, format='%.2f', value=item['custo_medio'])
         valor_venda = st.number_input('Valor de Venda', min_value=0.0, format='%.2f', value=item['valor_venda'])
-        estoque = st.number_input('Estoque', min_value=0.0, format='%.2f', value=item['estoque'])
+        if unidade_medida == 'quantidade':
+            estoque = st.number_input('Estoque', min_value=0, format='%d', value=int(item['estoque']))
+        else:
+            estoque = st.number_input('Estoque', min_value=0.0, format='%.2f', value=item['estoque'])
 
         if st.button('Atualizar'):
             data = {
