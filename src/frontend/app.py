@@ -174,29 +174,33 @@ elif choice == 'update_item':
     if st.button('Buscar'):
         item = get_item(item_id)
         if item:
-            produto = st.text_input('Nome do Produto', value=item['produto'])
-            unidade_medida = st.selectbox(
-                'Unidade de Medida',
-                ['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'],
-                index=['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'].index(item['unidade_medida']),
-            )
-            custo_medio = st.number_input('Custo Médio', min_value=0.0, format='%.2f', value=item['custo_medio'])
-            valor_venda = st.number_input('Valor de Venda', min_value=0.0, format='%.2f', value=item['valor_venda'])
-            estoque = st.number_input('Estoque', min_value=0.0, format='%.2f', value=item['estoque'])
+            st.session_state.item_to_update = item
 
-            if st.button('Atualizar'):
-                data = {
-                    'produto': produto,
-                    'unidade_medida': unidade_medida,
-                    'custo_medio': custo_medio,
-                    'valor_venda': valor_venda,
-                    'estoque': estoque,
-                }
-                updated_item = update_item(item_id, data)
-                if updated_item:
-                    st.success('Item atualizado com sucesso')
-                    df = pd.DataFrame([updated_item])
-                    st.write(df.to_html(index=False), unsafe_allow_html=True)
+    if 'item_to_update' in st.session_state:
+        item = st.session_state.item_to_update
+        produto = st.text_input('Nome do Produto', value=item['produto'])
+        unidade_medida = st.selectbox(
+            'Unidade de Medida',
+            ['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'],
+            index=['litro', 'metro', 'quilograma', 'metro_cubico', 'quantidade'].index(item['unidade_medida']),
+        )
+        custo_medio = st.number_input('Custo Médio', min_value=0.0, format='%.2f', value=item['custo_medio'])
+        valor_venda = st.number_input('Valor de Venda', min_value=0.0, format='%.2f', value=item['valor_venda'])
+        estoque = st.number_input('Estoque', min_value=0.0, format='%.2f', value=item['estoque'])
+
+        if st.button('Atualizar'):
+            data = {
+                'produto': produto,
+                'unidade_medida': unidade_medida,
+                'custo_medio': custo_medio,
+                'valor_venda': valor_venda,
+                'estoque': estoque,
+            }
+            updated_item = update_item(item_id, data)
+            if updated_item:
+                st.success('Item atualizado com sucesso')
+                df = pd.DataFrame([updated_item])
+                st.write(df.to_html(index=False), unsafe_allow_html=True)
 
 elif choice == 'delete_item':
     st.subheader('Deletar Item')
